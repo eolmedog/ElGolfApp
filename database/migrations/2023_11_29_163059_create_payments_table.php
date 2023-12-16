@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
             Schema::create('payments', function (Blueprint $table) {
-                $table->id();
+                $table->uuid('id')->primary();
                 $table->string('email');
                 $table->string('first_name');
                 $table->string('last_name');
-                $table->decimal('amount', 10, 0);
+                $table->decimal('amount', 12, 0);
                 $table->string('social_id');
                 $table->text('description');
                 $table->integer('hours');

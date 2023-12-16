@@ -8,8 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class PaymentModel extends Model
 {
-    use HasFactory;
+    use HasFactory; use HasUuids;
     protected $table = 'payments';
+    public $incrementing = false; // Indicates that the IDs are not auto-incrementing
+    protected $keyType = 'string'; // Indicates the type of the primary key
+
     protected $fillable = [
         'email',
         'first_name',
@@ -22,6 +25,7 @@ class PaymentModel extends Model
         'payment_date',
         'payment_method',
         'payment_id',
-        'payment_status'
+        'invoice_or_receipt',
+        'document_created'
     ];
 }

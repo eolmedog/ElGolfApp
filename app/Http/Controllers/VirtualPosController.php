@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plan;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
+use App\Models\Cliente;
 use App\Models\PaymentModel;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -18,25 +20,32 @@ class VirtualPosController extends Controller
                     'email' => 'required|email'
                 ]);
                 $endpoint ="https://api.virtualpos.cl/v3/payment/request";
-               
+                if (getenv('VIRTUALPOS_ENV') == 'sandbox') {
+                    $endpoint = "https://api.virtualpos-sandbox.com/v3/payment/request";
+                }
+
                 $api_key = getenv('VIRTUALPOS_API_KEY');
                 $secret_key = getenv('VIRTUALPOS_SECRET_KEY');
                 
-                $PRICE_PER_HOUR_PRESENCIAL= 32000;
-                $PRICE_PER_HOUR_ONLINE= 30000;
-                $OFERTA =false; //20% descuento
+                $cliente=Cliente::where('email',$request->input('email'))->first();
+                $PRICE_PER_HOUR = Plan::max('price');
+                # if $cliente doesn't exist, PRICE_PER_HOUR_PRESENCIAL equals to the maximum value of price in planes table:
+                if($cliente){
+                    $PRICE_PER_HOUR = $cliente->plan->price;
+                    $PRICE_PER_HOUR = $PRICE_PER_HOUR * (1-.2*$cliente->oferta);
+                }
 
 
                 $hours = $request->input('hours');
-                $amount = $hours * $PRICE_PER_HOUR_PRESENCIAL;
-                $social_id='12312312-3';
-                $phone='56987654321';
+                $amount = $hours * $PRICE_PER_HOUR;
+                $social_id='5555555-5';
+                $phone='56955555555';
                 $email = $request->input('email');
                 $first_name = $request->input('first_name');
                 $last_name = $request->input('last_name');
-                $description = urlencode('Pago de x horas a Centro El Golf');
-                $url_retorno =  base64_encode("https://example.com/pago-confirmado");
-                $callback_url =  base64_encode("https://example.com/pago-confirmado1");
+                $description = urlencode('Pago de ' . $hours . ' horas a Centro El Golf');
+                $url_retorno =  base64_encode("https://d9a2-2800-150-156-31e6-d1c8-8d69-1f83-cfd9.ngrok-free.app/post-compra");
+                $callback_url =  base64_encode("https://5bc24505-e7a9-44ce-8451-838e4a862bd1.mock.pstmn.io");
                 $payment=PaymentModel::create([
                     'email' => $email,
                     'first_name' => $first_name,
@@ -50,6 +59,7 @@ class VirtualPosController extends Controller
                     'merchant_internal_channel'=>'portal_pagos',
                 ]);
                 $merchant_internal_code = $payment->id;
+                
                 $merchant_internal_channel = 'Web App';
                 $token_payload = array();
                     
@@ -65,7 +75,6 @@ class VirtualPosController extends Controller
                 $token_payload['payment_method']='all';
                 $token_payload['description' ] = $description;
                 $token_payload['callback_url'] = $callback_url;
-
                 $signature = JWT::encode($token_payload, $secret_key,'HS256');
                 
                 $client = new Client([

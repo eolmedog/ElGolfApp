@@ -13,18 +13,18 @@ return new class extends Migration
     {
             Schema::create('payments', function (Blueprint $table) {
                 $table->uuid('id')->primary();
-                $table->string('email');
-                $table->string('first_name');
-                $table->string('last_name');
-                $table->decimal('amount', 12, 0);
-                $table->string('social_id');
-                $table->text('description');
-                $table->integer('hours');
+                $table->decimal('amount', 12, 0)->nullable();
+                $table->string('social_id')->nullable();
+                $table->text('description')->nullable();
+                $table->integer('hours')->nullable();
                 $table->string('payment_status');
                 $table->timestamp('payment_date')->nullable();
                 $table->string('payment_method')->nullable();
                 $table->string('payment_id')->nullable();
-                $table->timestamps();
+                $table->string('invoice_or_receipt')->nullable();
+                $table->boolean('document_created')->default(false);
+                $table->foreignUuid('cliente_id')->nullable()->references('id')->on('clientes');
+                $table->timestamps(); 
             });
     }
 

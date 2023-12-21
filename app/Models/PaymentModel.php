@@ -14,11 +14,7 @@ class PaymentModel extends Model
     protected $keyType = 'string'; // Indicates the type of the primary key
 
     protected $fillable = [
-        'email',
-        'first_name',
-        'last_name',
         'amount',
-        'social_id',
         'description',
         'hours',
         'payment_status',
@@ -28,4 +24,8 @@ class PaymentModel extends Model
         'invoice_or_receipt',
         'document_created'
     ];
+
+    public function cliente(){
+        return $this->belongsTo(Cliente::class);
+    }
 }

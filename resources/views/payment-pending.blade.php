@@ -27,23 +27,13 @@
 </head>
 <body>
     <div class="container payment-declined-container">
-        @if ($reason=='declined')
-            <h2>Payment Declined</h2>
-            <p class="lead">Unfortunately, your payment could not be processed.</p>
-            <img src="https://via.placeholder.com/150" alt="Payment Declined" class="img-fluid mb-3">
-            <p>Please check your payment details and try again.</p>
-            
-        @endif
-        @if ($reason=='pending')
-            <h2>There is something wrong with the transaction</h2>
-            <p class="lead mb-2">There is something odd about your transaction, but we are working to solve it. </p>
-            <p class="mb-4">If the payment went through, maybe our partners are taking their time to let us know.</p>
-                
-            <img src="https://via.placeholder.com/150" alt="Payment Pending" class="img-fluid mb-3">
-            <p class="mb-2">Please press the button below to try again.</p>
-            
-        @endif
-        <a href='#' class="btn btn-lg retry-button">Try Again</a>
+        <h2>There is something wrong with the transaction</h2>
+        <p class="lead">There is something odd about your transaction, but we are working to solve it. If the payment went through, maybe our partners are taking their time to let us know.
+            Please press the button below to try again.</p>
+        <img src="https://via.placeholder.com/150" alt="Payment Declined" class="img-fluid mb-3">
+        <p>Press the button to refresh and try again.</p>
+        
+        <a href={{ route('payment-select'. ['uuid'=>$merchant_internal_code]) }} class="btn btn-lg retry-button">Try Again</a>
     </div>
 
     <!-- Bootstrap JS, Popper.js, and jQuery -->

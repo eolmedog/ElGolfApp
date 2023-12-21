@@ -23,9 +23,12 @@
                 @error('hours')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
+                @error('email')
+                    <div class="text-danger">{{ $message }}</div>
+                @enderror
                 <input type="hidden" name="email" value={{$email}}>
-                <input type="hidden" name="first_name" value={{$first_name}}>
-                <input type="hidden" name="last_name" value={{$last_name}}>
+           
+                <input type="hidden" name="internal_code" value={{$internal_code}}>
                 <button id="purchase"type="submit" class="btn btn-success m-2">Purchase</button>
             </div>
 

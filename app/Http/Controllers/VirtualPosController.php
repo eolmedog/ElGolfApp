@@ -17,8 +17,9 @@ class VirtualPosController extends Controller
     public function create_payment(Request $request) {
                 $request->validate([
                     'hours' => 'required|integer|min:1',
-                    'email' => 'required|email'
+                    'email' => 'required|email',
                 ]);
+
                 $endpoint ="https://api.virtualpos.cl/v3/payment/request";
                 if (getenv('VIRTUALPOS_ENV') == 'sandbox') {
                     $endpoint = "https://api.virtualpos-sandbox.com/v3/payment/request";
@@ -26,8 +27,11 @@ class VirtualPosController extends Controller
 
                 $api_key = getenv('VIRTUALPOS_API_KEY');
                 $secret_key = getenv('VIRTUALPOS_SECRET_KEY');
-                
-                $cliente=Cliente::where('email',$request->input('email'))->first();
+                $payment=PaymentModel::find($request->input('internal_code'));
+                if (!$payment) {
+                    abort(404,'Payment object not found');
+                }
+                $cliente=$payment->cliente;
                 $PRICE_PER_HOUR = Plan::max('price');
                 # if $cliente doesn't exist, PRICE_PER_HOUR_PRESENCIAL equals to the maximum value of price in planes table:
                 if($cliente){
@@ -40,24 +44,18 @@ class VirtualPosController extends Controller
                 $amount = $hours * $PRICE_PER_HOUR;
                 $social_id='5555555-5';
                 $phone='56955555555';
-                $email = $request->input('email');
-                $first_name = $request->input('first_name');
-                $last_name = $request->input('last_name');
+                $email = $cliente->email;
+                $first_name = $cliente->first_name;
+                $last_name = $cliente->last_name;
                 $description = urlencode('Pago de ' . $hours . ' horas a Centro El Golf');
-                $url_retorno =  base64_encode("https://d9a2-2800-150-156-31e6-d1c8-8d69-1f83-cfd9.ngrok-free.app/post-compra");
-                $callback_url =  base64_encode("https://5bc24505-e7a9-44ce-8451-838e4a862bd1.mock.pstmn.io");
-                $payment=PaymentModel::create([
-                    'email' => $email,
-                    'first_name' => $first_name,
-                    'last_name' => $last_name,
-                    'amount' => $amount,
-                    'social_id' => $social_id,
-                    'description' => $description,
-                    'hours' => $hours,
-                    'payment_status' => 'pending',
-                    'merchant_internal_code' => 'OC_TEST',
-                    'merchant_internal_channel'=>'portal_pagos',
-                ]);
+                $url_retorno =  base64_encode("https://e1cd-2800-150-156-31e6-8938-c478-58f0-8c77.ngrok-free.app/post-compra");
+                $callback_url =  base64_encode("https://e1cd-2800-150-156-31e6-8938-c478-58f0-8c77.ngrok-free.app/post-compra");
+                $payment->amount=$amount;
+                $payment->description=$description;
+                $payment->hours=$hours;
+                $payment->payment_status='pending';
+                $payment->payment_method='Web App';
+                $payment->save();
                 $merchant_internal_code = $payment->id;
                 
                 $merchant_internal_channel = 'Web App';
@@ -128,7 +126,7 @@ class VirtualPosController extends Controller
                     
                         $token_payload = array();
                             
-                        $token_payload['amount' ] = $amount;
+                        $token_payload['amount'] = $amount;
                         $token_payload['email'] = $email;
                         $token_payload['social_id'] = $social_id;
                         $token_payload['first_name'] = $first_name;

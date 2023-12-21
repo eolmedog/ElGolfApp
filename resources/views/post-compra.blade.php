@@ -21,7 +21,7 @@
                 <h1 class="display-4">Thank You for Your Purchase!</h1>
                 <p class="lead">Your purchase has been processed successfully.</p>
                 <p class="lead mt-4">Would you like to receive:</p>
-                <form action="#" method="POST" id="hiddenForm">
+                <form action={{route('create-document')}} method="POST" id="hiddenForm">
                     @csrf <!-- Include CSRF token for security -->
                     <input type="hidden" name="internal_code" value="{{ $internal_code }}">
                     <input type="hidden" name="invoice_receipt" id="invoice_receipt" value="">

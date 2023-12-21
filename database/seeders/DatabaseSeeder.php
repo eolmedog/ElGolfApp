@@ -18,7 +18,9 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        ClientesSeeder::run();
         PlanesSeeder::run();
+        ClientesSeeder::run();
+        PaymentSeeder::run();
+
     }
 }

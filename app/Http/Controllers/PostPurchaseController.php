@@ -11,12 +11,13 @@ class PostPurchaseController extends Controller
 {
    
     public function receive_payment(Request $request){
-        $uuid=$request->input('uuid');
+        $uuid=$request->input('uuid'); //uuid de virtualpos
         $payment_data=$this->get_payment_info($uuid);
+
         $payment_status=$payment_data->order->status;
         $internal_code=$payment_data->order->merchant_internal_code;
         if ($payment_status=='pagado'){
-            $payment=PaymentModel::where('merchant_internal_code',$internal_code)->first();
+            $payment=PaymentModel::find($internal_code);
             $payment->update(['payment_status'=>'paid','payment_date'=>date('Y-m-d'),'payment_method'=>'virtualpos','payment_id'=>$uuid]);
             return view('post-compra', [
                 'internal_code' => $internal_code
@@ -26,14 +27,43 @@ class PostPurchaseController extends Controller
             $payment=PaymentModel::where('merchant_internal_code',$internal_code)->first();
             $payment->update(['payment_status'=>'declined','payment_method'=>'virtualpos','payment_id'=>$uuid]);
             return view('payment-declined', [
-                'internal_code' => $internal_code
+                'internal_code' => $internal_code,
+                'reason' => 'declined'
+            ]); 
+        }
+
+        else {
+            $payment=PaymentModel::where('merchant_internal_code',$internal_code)->first();
+            $payment->update(['payment_method'=>'virtualpos','payment_id'=>$uuid]);
+            return view('payment-pending', [
+                'internal_code' => $internal_code,
+                'reason' => 'pending' 
             ]);
         }
 
     }
     public function process_payment(Request $request){
+        #Para API
         $uuid=$request->input('uuid');
         $payment_data=$this->get_payment_info($uuid);
+        $payment_status=$payment_data->order->status;
+        $internal_code=$payment_data->order->merchant_internal_code;
+        if ($payment_status=='pagado'){
+            $payment=PaymentModel::find($internal_code);
+            $payment->update(['payment_status'=>'paid','payment_date'=>date('Y-m-d'),'payment_method'=>'virtualpos','payment_id'=>$uuid]);
+            return 200;
+        }
+        else if ($payment_status=='rechazado'){
+            $payment=PaymentModel::where('merchant_internal_code',$internal_code)->first();
+            $payment->update(['payment_status'=>'declined','payment_method'=>'virtualpos','payment_id'=>$uuid]);
+            return 200;
+        }
+
+        else {
+            $payment=PaymentModel::where('merchant_internal_code',$internal_code)->first();
+            $payment->update(['payment_method'=>'virtualpos','payment_id'=>$uuid]);
+            return 200;
+        }
     }
 
     public function get_payment_info($uuid){

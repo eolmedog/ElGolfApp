@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostPurchaseController;
+use App\Http\Controllers\PurchaseSelectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
@@ -18,18 +19,25 @@ use App\Http\Controllers\ShowButtonsController;
 |
 */
 
-Route::get('/pago-horas',[ShowButtonsController::class,'index']);
+Route::get('/pago-horas',[PurchaseSelectController::class,'index'])->name('payment-select');
 
 Route::post('/compra',[VirtualPosController::class,'create_payment'])->name('purchase');
 
 Route::get('/post-compra/{uuid}', [PostPurchaseController::class,'get_payment_info']);
 
 Route::get('/declined', function () {
-    return view('payment-declined');
+    return view('payment-declined', [
+        'reason' => 'pending',
+        'merchant_internal_code' => '123'
+    ]);
 });
+
+Route::post('/create-document',function(){
+    return 'TODO';
+})->name('create-document');
 
 Route::post('/post-compra',[PostPurchaseController::class,'receive_payment']);
 
 Route::get('/', function () {
-    return "Para pagar haga click <a href='/pago-horas?email=qCwZf@example.com&first_name=Enrique&last_name=Olmedo'>aqui</a>";
+    return "Para pagar haga click <a href='/pago-horas?uuid=9ae16ef9-bcf8-46ac-a8d5-29eaef450b45'>aqui</a>";
 });

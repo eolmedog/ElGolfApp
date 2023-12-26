@@ -1,12 +1,14 @@
 <?php
 
-use App\Http\Controllers\PostPurchaseController;
-use App\Http\Controllers\PurchaseSelectController;
+use App\Mail\LowHoursEmail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VirtualPosController;
 use App\Http\Controllers\ShowButtonsController;
+use App\Http\Controllers\PostPurchaseController;
+use App\Http\Controllers\PurchaseSelectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,4 +42,12 @@ Route::post('/post-compra',[PostPurchaseController::class,'receive_payment']);
 
 Route::get('/', function () {
     return "Para pagar haga click <a href='/pago-horas?uuid=9ae16ef9-bcf8-46ac-a8d5-29eaef450b45'>aqui</a>";
+});
+
+Route::get('/test',function(){
+    $internal_code='wsudhdwe123';
+    $first_name='Juan';
+    $last_name='Perez';
+    Mail::to('eolmedogonzalez@gmail.com')->queue(new LowHoursEmail($internal_code,$first_name,$last_name));
+    return 'Email enviado';
 });

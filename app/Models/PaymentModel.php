@@ -17,6 +17,7 @@ class PaymentModel extends Model
         'amount',
         'description',
         'hours',
+        'cliente_id',
         'payment_status',
         'payment_date',
         'payment_method',

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CreatePaymentController;
 use App\Http\Controllers\PostPurchaseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,3 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('/payment_webhook',[PostPurchaseController::class,'process_payment']);
+
+Route::post('/low_hours', [CreatePaymentController::class, 'index']);

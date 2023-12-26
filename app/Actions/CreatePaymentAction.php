@@ -13,11 +13,13 @@ class CreatePaymentAction
     public function handle($email_cliente,$status='pending')
     {
         $cliente=Cliente::where('email',$email_cliente)->first();
+       
         $cliente_id=$cliente->id;
+
         $new_payment=PaymentModel::create([
             'payment_status' => $status,
             'cliente_id' => $cliente_id
         ]);
-        return $new_payment;
+        return $new_payment->id;
     }
 }

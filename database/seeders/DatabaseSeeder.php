@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // ]);
         PlanesSeeder::run();
         ClientesSeeder::run();
-        PaymentSeeder::run();
+        
 
     }
 }

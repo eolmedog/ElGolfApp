@@ -23,6 +23,7 @@ return new class extends Migration
                 $table->string('payment_id')->nullable();
                 $table->string('invoice_or_receipt')->nullable();
                 $table->boolean('document_created')->default(false);
+                $table->boolean('hours_added')->default(false);
                 $table->foreignUuid('cliente_id')->nullable()->references('id')->on('clientes');
                 $table->timestamps(); 
             });

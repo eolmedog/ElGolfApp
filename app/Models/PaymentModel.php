@@ -23,7 +23,8 @@ class PaymentModel extends Model
         'payment_method',
         'payment_id',
         'invoice_or_receipt',
-        'document_created'
+        'document_created',
+        'hours_added'
     ];
 
     public function cliente(){

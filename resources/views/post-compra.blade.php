@@ -20,7 +20,7 @@
             <div class="col-md-8 offset-md-2 text-center">
                 <h1 class="display-4">Thank You for Your Purchase!</h1>
                 <p class="lead">Your purchase has been processed successfully.</p>
-                <p class="lead mt-4">Would you like to receive:</p>
+                {{-- <p class="lead mt-4">Would you like to receive:</p>
                 <form action={{route('create-document')}} method="POST" id="hiddenForm">
                     @csrf <!-- Include CSRF token for security -->
                     <input type="hidden" name="internal_code" value="{{ $internal_code }}">
@@ -37,7 +37,7 @@
                         <button type="button" onclick="setAdditionalParam('invoice')" class="btn btn-success btn-lg btn-block mb-1">An Invoice</button>
                         <p class="lead small mb-1">I'm here on behalf of a business and need an invoice</p>
                         <img src="https://denegocios.cl/wp-content/uploads/2023/02/lol.webp" alt="Example of Invoice" class="example-image">
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>

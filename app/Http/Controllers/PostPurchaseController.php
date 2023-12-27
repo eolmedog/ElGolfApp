@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\IncreaseHoursAction;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use App\Models\PaymentModel;
@@ -18,7 +19,9 @@ class PostPurchaseController extends Controller
         $internal_code=$payment_data->order->merchant_internal_code;
         if ($payment_status=='pagado'){
             $payment=PaymentModel::find($internal_code);
+
             $payment->update(['payment_status'=>'paid','payment_date'=>date('Y-m-d'),'payment_method'=>'virtualpos','payment_id'=>$uuid]);
+            IncreaseHoursAction::dispatch($internal_code);
             return view('post-compra', [
                 'internal_code' => $internal_code
             ]);

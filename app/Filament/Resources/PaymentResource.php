@@ -49,6 +49,10 @@ class PaymentResource extends Resource
                     true => 'Sí',
                     false => 'No',
                 ])->required()->default(false)->label('Documento Creado'),
+                Forms\Components\Select::make('hours_added')->options([
+                    true => 'Sí',
+                    false => 'No',
+                ])->required()->default(false)->label('Horas Agregadas'),
             ]);
     }
 
@@ -65,13 +69,14 @@ class PaymentResource extends Resource
                 Tables\Columns\TextColumn::make('invoice_or_receipt')->label('Factura o Boleta'),
                 Tables\Columns\TextColumn::make('document_created')->label('Documento Creado'),
                 Tables\Columns\TextColumn::make('payment_date')->label('Fecha Pago'),
+                Tables\Columns\TextColumn::make('hours_added')->label('Horas Agregadas'),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('resendEmail')->label('Reenviar Email')->icon('heroicon-o-envelope')->action(function($record){
+                Tables\Actions\Action::make('resendEmail')->label('Reenviar Email')->icon('heroicon-o-envelope ')->action(function($record){
                     $email=$record->cliente->email;
                     $internal_code=$record->internal_code;
                     $first_name=$record->first_name;

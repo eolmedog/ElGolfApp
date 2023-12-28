@@ -43,7 +43,7 @@ USER root
 
 # Install PHP dependencies
 RUN composer install --optimize-autoloader --no-dev
-
+RUN composer update
 # Copy Supervisor configuration file
 COPY .docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 

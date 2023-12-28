@@ -76,7 +76,7 @@ class PaymentResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\Action::make('resendEmail')->label('Reenviar Email')->icon('heroicon-o-envelope ')->action(function($record){
+                Tables\Actions\Action::make('resendEmail')->label('Reenviar Email')->icon('heroicon-o-envelope')->action(function($record){
                     $email=$record->cliente->email;
                     $internal_code=$record->internal_code;
                     $first_name=$record->first_name;

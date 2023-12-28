@@ -34,7 +34,7 @@ class IncreaseHoursJob implements ShouldQueue
         $payment=PaymentModel::find($this->payment_id);
         if ($payment->hours_added==false) {
             $res=IncreaseHoursAction::handle($payment->cliente->email,$payment->hours);
-            if ($res->status_code==200){
+            if ($res->getStatusCode()==200){
                 $payment->update(['hours_added'=>true]);
             }
             else {

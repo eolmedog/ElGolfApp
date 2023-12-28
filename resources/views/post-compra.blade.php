@@ -38,7 +38,7 @@
                         <p class="lead small mb-1">I'm here on behalf of a business and need an invoice</p>
                         <img src="https://denegocios.cl/wp-content/uploads/2023/02/lol.webp" alt="Example of Invoice" class="example-image">
                     </div> --}}
-                </div>
+                
             </div>
         </div>
     </div>

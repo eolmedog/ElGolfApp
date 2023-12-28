@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\IncreaseHoursAction;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Client;
 use App\Models\PaymentModel;
 use Illuminate\Http\Request;
+use App\Jobs\IncreaseHoursJob;
+use Illuminate\Support\Facades\Log;
+use App\Actions\IncreaseHoursAction;
 
 class PostPurchaseController extends Controller
 {
@@ -19,9 +21,11 @@ class PostPurchaseController extends Controller
         $internal_code=$payment_data->order->merchant_internal_code;
         if ($payment_status=='pagado'){
             $payment=PaymentModel::find($internal_code);
-
+            $cliente_email=$payment->cliente->email;
+            $hours=$payment->hours;
             $payment->update(['payment_status'=>'paid','payment_date'=>date('Y-m-d'),'payment_method'=>'virtualpos','payment_id'=>$uuid]);
-            IncreaseHoursAction::dispatch($internal_code);
+            IncreaseHoursJob::dispatch($internal_code);
+            Log::debug("message: Payment for internal_code $internal_code was successful");
             return view('post-compra', [
                 'internal_code' => $internal_code
             ]);
@@ -51,14 +55,20 @@ class PostPurchaseController extends Controller
         $payment_data=$this->get_payment_info($uuid);
         $payment_status=$payment_data->order->status;
         $internal_code=$payment_data->order->merchant_internal_code;
+        
         if ($payment_status=='pagado'){
             $payment=PaymentModel::find($internal_code);
-            $payment->update(['payment_status'=>'paid','payment_date'=>date('Y-m-d'),'payment_method'=>'virtualpos','payment_id'=>$uuid]);
+            $cliente_email=$payment->cliente->email;
+            $hours=$payment->hours;
+            $payment->update(['payment_status'=>'paid','payment_date'=>date('Y-m-d H:i:s'),'payment_method'=>'virtualpos','payment_id'=>$uuid]);
+            Log::debug("message: Process payment for internal_code was succesful $internal_code was successful");
+            IncreaseHoursJob::dispatch($internal_code);
             return 200;
         }
         else if ($payment_status=='rechazado'){
             $payment=PaymentModel::where('merchant_internal_code',$internal_code)->first();
             $payment->update(['payment_status'=>'declined','payment_method'=>'virtualpos','payment_id'=>$uuid]);
+            
             return 200;
         }
 

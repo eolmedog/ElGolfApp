@@ -48,8 +48,8 @@ class VirtualPosController extends Controller
                 $first_name = $cliente->first_name;
                 $last_name = $cliente->last_name;
                 $description = urlencode('Pago de ' . $hours . ' horas a Centro El Golf');
-                $url_retorno =  base64_encode("https://71d3-2800-150-156-13b2-78f0-f294-6c6-b11f.ngrok-free.app/post-compra");
-                $callback_url =  base64_encode("https://71d3-2800-150-156-13b2-78f0-f294-6c6-b11f.ngrok-free.app/post-compra");
+                $url_retorno = base64_encode("https://d484-186-11-109-120.ngrok-free.app/api/post-compra");
+                $callback_url = base64_encode("https://d484-186-11-109-120.ngrok-free.app/api/payment_webhook");
                 $payment->amount=$amount;
                 $payment->description=$description;
                 $payment->hours=$hours;

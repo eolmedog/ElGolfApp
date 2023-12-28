@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use Lorisleiva\Actions\Concerns\AsAction;
 
-class IncreaseHoursAction
+ class IncreaseHoursAction
 {
     use AsAction;
 

@@ -20,6 +20,7 @@
             <div class="col-md-8 offset-md-2 text-center">
                 <h1 class="display-4">Thank You for Your Purchase!</h1>
                 <p class="lead">Your purchase has been processed successfully.</p>
+                <p class="lead">You will receive a proof of payment on your email inbox during the next few minutes.</p>
                 {{-- <p class="lead mt-4">Would you like to receive:</p>
                 <form action={{route('create-document')}} method="POST" id="hiddenForm">
                     @csrf <!-- Include CSRF token for security -->

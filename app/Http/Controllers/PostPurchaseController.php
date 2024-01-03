@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use App\Jobs\IncreaseHoursJob;
 use Illuminate\Support\Facades\Log;
 use App\Actions\IncreaseHoursAction;
+use App\Mail\ProofOfPaymentMail;
+use Illuminate\Support\Facades\Mail;
 
 class PostPurchaseController extends Controller
 {
@@ -23,7 +25,14 @@ class PostPurchaseController extends Controller
             $payment=PaymentModel::find($internal_code);
             $cliente_email=$payment->cliente->email;
             $hours=$payment->hours;
-            $payment->update(['payment_status'=>'paid','payment_date'=>date('Y-m-d'),'payment_method'=>'virtualpos','payment_id'=>$uuid]);
+            $first_name=$payment->cliente->first_name;
+            $last_name=$payment->cliente->last_name;
+            $amount=$payment->amount;
+            $date=date('Y-m-d');
+            if ($payment->status != 'paid'){
+                $payment->update(['payment_status'=>'paid','payment_date'=>date('Y-m-d'),'payment_method'=>'virtualpos','payment_id'=>$uuid]);
+                Mail::to($cliente_email)->queue(new ProofOfPaymentMail($first_name,$last_name, $amount,$hours, $date));
+            }
             IncreaseHoursJob::dispatch($internal_code);
             Log::debug("message: Payment for internal_code $internal_code was successful");
             return view('post-compra', [

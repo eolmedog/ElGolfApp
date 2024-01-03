@@ -43,3 +43,7 @@ Route::post('/create-document',function(){
 Route::get('/', function () {
     return "Para pagar haga click <a href='/pago-horas?uuid=9ae16ef9-bcf8-46ac-a8d5-29eaef450b45'>aqui</a>";
 });
+
+Route::get('/test',function(){
+    return view('mail.ProofOfPayment',['first_name'=>'Juan','last_name'=>'Perez','amountPaid'=>10000,'hoursPaid'=>5, 'date'=>'2022-01-01']);
+});

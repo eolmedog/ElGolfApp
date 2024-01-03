@@ -28,6 +28,9 @@ class PlanResource extends Resource
                     ->maxLength(255)->label('Nombre'),
                 Forms\Components\TextInput::make('price')
                     ->required()->numeric()->prefix('$')->label('Precio'),
+                Forms\Components\TextInput::make('description')
+                    ->required()
+                    ->maxLength(255)->label('Descripción'),
             ]);
     }
 

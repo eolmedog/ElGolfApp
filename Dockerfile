@@ -57,4 +57,4 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD php /var/www/artisan db:wipe && php /var/www/artisan migrate --seed && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
+CMD php /var/www/artisan migrate:fresh --seed && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
